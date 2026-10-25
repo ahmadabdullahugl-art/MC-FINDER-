@@ -1,180 +1,244 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MC Finder</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MC Finder</title>
+  <style>
+    * { box-sizing: border-box; }
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f6fa;
+      color: #172033;
+    }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f3f6fa;
-            color: #172033;
-        }
+    header {
+      background: #14243a;
+      color: white;
+      padding: 24px;
+      text-align: center;
+    }
 
-        header {
-            background: #14243a;
-            color: white;
-            padding: 24px;
-            text-align: center;
-        }
+    header h1 { margin: 0 0 8px; }
 
-        header h1 {
-            margin: 0 0 8px;
-        }
+    main {
+      max-width: 700px;
+      margin: 50px auto;
+      padding: 20px;
+    }
 
-        main {
-            max-width: 700px;
-            margin: 50px auto;
-            padding: 20px;
-        }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px #0000000d;
+    }
 
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 18px #0000000d;
-        }
+    h2 { margin-top: 0; }
 
-        h2 {
-            margin-top: 0;
-        }
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ccd4df;
+      border-radius: 7px;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
 
-        input {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid #ccd4df;
-            border-radius: 7px;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #1769e0;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-        button {
-            width: 100%;
-            padding: 14px;
-            background: #1769e0;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+    button:hover { background: #1054b8; }
 
-        button:hover {
-            background: #1054b8;
-        }
+    #results {
+      margin-top: 25px;
+      padding: 15px;
+      background: #f3f6fa;
+      border-radius: 7px;
+      display: none;
+      overflow-wrap: anywhere;
+      line-height: 1.6;
+    }
 
-        #results {
-            margin-top: 25px;
-            padding: 15px;
-            background: #f3f6fa;
-            border-radius: 7px;
-            display: none;
-            overflow-wrap: anywhere;
-        }
+    .notice {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #566276;
+      line-height: 1.6;
+    }
 
-        .notice {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #566276;
-            line-height: 1.6;
-        }
-
-        footer {
-            text-align: center;
-            padding: 25px;
-            color: #667085;
-            font-size: 13px;
-        }
-    </style>
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #667085;
+      font-size: 13px;
+    }
+  </style>
 </head>
-
 <body>
+  <header>
+    <h1>MC Finder</h1>
+    <p>Brokerage Company Verification</p>
+  </header>
 
-    <header>
-        <h1>MC Finder</h1>
-        <p>Brokerage Company Verification</p>
-    </header>
+  <main>
+    <div class="card">
+      <h2>Search for a Company</h2>
+      <p>Enter a company's website domain to search brokerage records.</p>
 
-    <main>
-        <div class="card">
-            <h2>Search for a Company</h2>
+      <form id="searchForm">
+        <label for="domain">Company Website Domain</label>
+        <input
+          type="text"
+          id="domain"
+          placeholder="example.com"
+          required
+        >
+        <button type="submit" id="searchButton">Search Company</button>
+      </form>
 
-            <p>
-                Enter a company's website domain to begin
-                the verification process.
-            </p>
+      <div id="results" aria-live="polite"></div>
 
-            <form id="searchForm">
-                <label for="domain">Company Website Domain</label>
+      <p class="notice">
+        Results are retrieved from the configured brokerage records
+        database. A missing result does not prove that a company is
+        fraudulent. Verify company details against official FMCSA records.
+      </p>
+    </div>
+  </main>
 
-                <input
-                    type="text"
-                    id="domain"
-                    placeholder="example.com"
-                    required
-                >
+  <footer>MC Finder &copy; 2026</footer>
 
-                <button type="submit">Search Company</button>
-            </form>
+  <script>
+    // Replace these two placeholders with your Supabase project details.
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_PUBLISHABLE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
 
-            <div id="results" aria-live="polite"></div>
+    const form = document.getElementById("searchForm");
+    const domainInput = document.getElementById("domain");
+    const results = document.getElementById("results");
+    const searchButton = document.getElementById("searchButton");
 
-            <p class="notice">
-                This is an initial prototype. Live FMCSA verification,
-                company phone lookups, individual user accounts, and
-                database connectivity have not been configured yet.
-                No company information is retrieved by this version.
-            </p>
-        </div>
-    </main>
+    function normalizeDomain(value) {
+      return value.trim()
+        .replace(/^https?:\/\//i, "")
+        .split("/")[0]
+        .replace(/:\d+$/, "")
+        .replace(/\.$/, "")
+        .toLowerCase();
+    }
 
-    <footer>
-        MC Finder &copy; 2026
-    </footer>
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
 
-    <script>
-        const form = document.getElementById("searchForm");
-        const domainInput = document.getElementById("domain");
-        const results = document.getElementById("results");
+      const domain = normalizeDomain(domainInput.value);
 
-        form.addEventListener("submit", function (event) {
-            event.preventDefault();
+      results.style.display = "block";
+      results.textContent = "";
 
-            let domain = domainInput.value.trim();
+      if (!/^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/i.test(domain)) {
+        results.textContent = "Please enter a valid domain, such as example.com.";
+        return;
+      }
 
-            // Accept a domain with or without https://
-            domain = domain.replace(/^https?:\/\//i, "");
-            domain = domain.split("/")[0].toLowerCase();
+      if (
+        SUPABASE_URL === "YOUR_SUPABASE_PROJECT_URL" ||
+        SUPABASE_PUBLISHABLE_KEY === "YOUR_SUPABASE_PUBLISHABLE_KEY"
+      ) {
+        results.textContent =
+          "Setup required: add your Supabase project URL and publishable key in the code.";
+        return;
+      }
 
-            // Basic domain format validation
-            const validDomain =
-                /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/i;
+      searchButton.disabled = true;
+      searchButton.textContent = "Searching...";
 
-            results.style.display = "block";
+      try {
+        const endpoint = new URL(
+          SUPABASE_URL.replace(/\/+$/, "") +
+          "/rest/v1/brokerage_records"
+        );
 
-            if (!validDomain.test(domain)) {
-                results.textContent =
-                    "Please enter a valid domain, such as example.com.";
-                return;
-            }
+        endpoint.searchParams.set("select", "*");
+        endpoint.searchParams.set("domain", "eq." + domain);
+        endpoint.searchParams.set("verification_status", "eq.verified");
+        endpoint.searchParams.set("limit", "10");
 
-            results.textContent =
-                "Domain entered: " + domain +
-                ". Live company lookup is not connected yet.";
+        const response = await fetch(endpoint.toString(), {
+          headers: {
+            "apikey": SUPABASE_PUBLISHABLE_KEY,
+            "Authorization": "Bearer " + SUPABASE_PUBLISHABLE_KEY
+          }
         });
-    </script>
-sb_publishable_qhw3ttbHW3e03-A3lxBz3w_joc1l1RC
+
+        if (!response.ok) {
+          throw new Error(
+            response.status === 401 || response.status === 403
+              ? "Database access denied. Check your Supabase key and read policy."
+              : "Database request failed (HTTP " + response.status + "). Check the table and column names."
+          );
+        }
+
+        const records = await response.json();
+
+        if (!records.length) {
+          results.textContent =
+            "No verified brokerage record found for " + domain +
+            ". This does not mean the company is fraudulent.";
+          return;
+        }
+
+        results.replaceChildren();
+
+        const heading = document.createElement("strong");
+        heading.textContent = "Verified database match";
+        results.appendChild(heading);
+
+        records.forEach(function(record) {
+          const item = document.createElement("div");
+          item.style.marginTop = "12px";
+
+          // Display available fields without interpreting database content as HTML.
+          ["company_name", "domain", "mc_number", "dot_number",
+           "verification_status"].forEach(function(field) {
+            if (record[field] !== undefined && record[field] !== null) {
+              const line = document.createElement("p");
+              const label = document.createElement("strong");
+              label.textContent = field.replace(/_/g, " ") + ": ";
+              line.appendChild(label);
+              line.appendChild(document.createTextNode(String(record[field])));
+              item.appendChild(line);
+            }
+          });
+
+          results.appendChild(item);
+        });
+
+      } catch (error) {
+        results.textContent = error.message ||
+          "Unable to connect to the database. Please try again.";
+      } finally {
+        searchButton.disabled = false;
+        searchButton.textContent = "Search Company";
+      }
+    });
+  </script>
 </body>
 </html>
